@@ -1,30 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { navigate } from 'gatsby';
 import netlifyIdentity from 'netlify-identity-widget';
 
+import { selectSession } from '../app/selectors';
+
 import Layout from '../components/layout';
-import Image from '../components/image';
-import SEO from '../components/seo';
 
-const IndexPage = () => {
-    const [user, setUser] = useState();
+// TODO: this isn't refreshing when we log in/log out. Probably something to do with it being a static page.
+const IndexPage = ({ session }) => {
+    const isLoggedIn = session !== null;
 
-    useEffect(() => {
-        netlifyIdentity.init();
-        netlifyIdentity.on('login', (user) => setUser(user));
-        netlifyIdentity.on('logout', () => setUser());
-    }, []);
+    // If the user is already logged in, then redirect to the app page.
+    if (isLoggedIn) {
+        navigate('/app');
+        return null;
+    }
 
     return (
         <Layout>
-            <SEO title="Home" keywords={[`gatsby`, `application`, `react`]} />
-            <h1>Hello {user ? user.user_metadata.full_name : 'World!'}</h1>
-            <p>Welcome to your new Gatsby site.</p>
-            <p>Now go build something great.</p>
-            <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-                <Image />
-            </div>
-            <button onClick={() => netlifyIdentity.open()}>{user ? 'Log Out' : 'Log In'}</button>
+            <button onClick={() => netlifyIdentity.open()}>Log In</button>
         </Layout>
     );
 };
-export default IndexPage;
+
+IndexPage.propTypes = {
+    // TODO: enforce null or string
+    session: PropTypes.any
+};
+
+export default connect((state) => ({
+    session: selectSession(state)
+}))(IndexPage);
