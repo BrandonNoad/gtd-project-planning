@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigate } from 'gatsby';
@@ -7,10 +7,16 @@ import { selectSession } from '../../selectors';
 const PrivateRoute = ({ session, component: Component, ...rest }) => {
     const isLoggedIn = session !== null;
 
-    // If the user is NOT logged in, then redirect to the index page.
+    useEffect(() => {
+        // If the user is NOT logged in, then redirect to the index page.
+        if (!isLoggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn]);
+
     if (!isLoggedIn) {
-        navigate('/');
-        return null;
+        // TODO: Use loading component.
+        return <p>Loading...</p>;
     }
 
     return <Component session={session} {...rest} />;

@@ -1,19 +1,17 @@
-const React = require('react');
-const { useState, useEffect } = React;
-const PropTypes = require('prop-types');
-const { Provider } = require('react-redux');
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import netlifyIdentity from 'netlify-identity-widget';
 
-const createStore = require('../src/app/util/create-store').default;
+import createStore from '../src/app/util/create-store';
 
-const { netlifyIdentityResultToSession } = require('../src/app/util/NetlifyIdentity');
-const { logIn, logOut } = require('../src/app/actions');
+import { netlifyIdentityResultToSession } from '../src/app/util/NetlifyIdentity';
+import { logIn, logOut } from '../src/app/actions';
 
 const ReduxProviderPreloadedWithSession = ({ store, children }) => {
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        const netlifyIdentity = require('netlify-identity-widget');
-
         const netlifyIdentityCallback = (netlifyIdentityResult) => {
             const session = netlifyIdentityResultToSession(netlifyIdentityResult);
 
@@ -28,6 +26,7 @@ const ReduxProviderPreloadedWithSession = ({ store, children }) => {
         // May be null.
         const netlifyIdentityResult = netlifyIdentity.currentUser();
 
+        // TODO: check expired
         netlifyIdentityCallback(netlifyIdentityResult);
 
         netlifyIdentity.on('login', (netlifyIdentityResult) => {
@@ -38,7 +37,7 @@ const ReduxProviderPreloadedWithSession = ({ store, children }) => {
         netlifyIdentity.on('logout', () => store.dispatch(logOut()));
 
         setIsReady(true);
-    }, []);
+    }, [store]);
 
     if (!isReady) {
         // TODO: Use loading component.

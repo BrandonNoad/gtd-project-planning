@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigate } from 'gatsby';
@@ -12,10 +12,16 @@ import Layout from '../components/layout';
 const IndexPage = ({ session }) => {
     const isLoggedIn = session !== null;
 
-    // If the user is already logged in, then redirect to the app page.
+    useEffect(() => {
+        // If the user is already logged in, then redirect to the app page.
+        if (isLoggedIn) {
+            navigate('/app');
+        }
+    }, [isLoggedIn]);
+
     if (isLoggedIn) {
-        navigate('/app');
-        return null;
+        // TODO: Use loading component.
+        return <p>Loading...</p>;
     }
 
     return (

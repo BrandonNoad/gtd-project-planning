@@ -1,4 +1,4 @@
-import * as api from '../api';
+// import * as api from '../api';
 import * as actionTypes from '../constants/action-types';
 
 export const logIn = (session) => (dispatch) => {
