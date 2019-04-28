@@ -1,50 +1,70 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Provider } from 'react-redux';
-import netlifyIdentity from 'netlify-identity-widget';
+const React = require('react');
+const { useState, useEffect } = React;
+const PropTypes = require('prop-types');
+const { Provider } = require('react-redux');
 
-import createStore from '../src/app/util/create-store';
-import { netlifyIdentityResultToSession } from '../src/app/util/NetlifyIdentity';
-import { logIn, logOut } from '../src/app/actions';
+const createStore = require('../src/app/util/create-store').default;
 
-const ReduxProviderPreloadedWithSession = ({ children }) => {
-    netlifyIdentity.init();
+const { netlifyIdentityResultToSession } = require('../src/app/util/NetlifyIdentity');
+const { logIn, logOut } = require('../src/app/actions');
 
-    // Creating store in `wrapRootElement` handler ensures:
-    //  - there is fresh store for each SSR page
-    //  - it will be called only once in browser, when React mounts
-    const store = createStore();
+const ReduxProviderPreloadedWithSession = ({ store, children }) => {
+    const [isReady, setIsReady] = useState(false);
 
-    const logInHandler = (netlifyIdentityResult) => {
-        const session = netlifyIdentityResultToSession(netlifyIdentityResult);
+    useEffect(() => {
+        const netlifyIdentity = require('netlify-identity-widget');
 
-        // Is the user logged in?
-        if (session !== null) {
-            store.dispatch(logIn(session));
-        }
-    };
+        const netlifyIdentityCallback = (netlifyIdentityResult) => {
+            const session = netlifyIdentityResultToSession(netlifyIdentityResult);
 
-    // May be null.
-    const netlifyIdentityResult = netlifyIdentity.currentUser();
+            // Is the user logged in?
+            if (session !== null) {
+                store.dispatch(logIn(session));
+            }
+        };
 
-    logInHandler(netlifyIdentityResult);
+        netlifyIdentity.init();
 
-    netlifyIdentity.on('login', (netlifyIdentityResult) => {
-        logInHandler(netlifyIdentityResult);
-        netlifyIdentity.close();
-    });
-    netlifyIdentity.on('logout', () => store.dispatch(logOut()));
+        // May be null.
+        const netlifyIdentityResult = netlifyIdentity.currentUser();
+
+        netlifyIdentityCallback(netlifyIdentityResult);
+
+        netlifyIdentity.on('login', (netlifyIdentityResult) => {
+            netlifyIdentityCallback(netlifyIdentityResult);
+            netlifyIdentity.close();
+        });
+
+        netlifyIdentity.on('logout', () => store.dispatch(logOut()));
+
+        setIsReady(true);
+    }, []);
+
+    if (!isReady) {
+        // TODO: Use loading component.
+        return <p>Loading...</p>;
+    }
 
     return <Provider store={store}>{children}</Provider>;
 };
 
 ReduxProviderPreloadedWithSession.propTypes = {
+    store: PropTypes.object,
     children: PropTypes.any
 };
 
-const wrapWithReduxProvider = ({ element }) => (
-    <ReduxProviderPreloadedWithSession>{element}</ReduxProviderPreloadedWithSession>
-);
+const wrapWithReduxProvider = ({ element }) => {
+    // Creating store in `wrapRootElement` handler ensures:
+    //  - there is fresh store for each SSR page
+    //  - it will be called only once in browser, when React mounts
+    const store = createStore();
+
+    return (
+        <ReduxProviderPreloadedWithSession store={store}>
+            {element}
+        </ReduxProviderPreloadedWithSession>
+    );
+};
 
 wrapWithReduxProvider.propTypes = {
     element: PropTypes.any
