@@ -1,3 +1,7 @@
+'use strict';
+
+const Proxy = require('http-proxy-middleware');
+
 module.exports = {
     siteMetadata: {
         title: `GTD Project Planning`,
@@ -34,5 +38,18 @@ module.exports = {
         // this (optional) plugin enables Progressive Web App + Offline functionality
         // To learn more, visit: https://gatsby.app/offline
         // 'gatsby-plugin-offline',
-    ]
+    ],
+    // For avoiding CORS while developing Netlify Functions locally read more:
+    // https://www.gatsbyjs.org/docs/api-proxy/#advanced-proxying
+    developMiddleware: (app) => {
+        app.use(
+            '/.netlify/functions/',
+            Proxy({
+                target: 'http://localhost:9000',
+                pathRewrite: {
+                    '/.netlify/functions/': ''
+                }
+            })
+        );
+    }
 };
