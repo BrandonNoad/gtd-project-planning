@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigate } from 'gatsby';
-import netlifyIdentity from 'netlify-identity-widget';
 
 import { selectSession } from '../app/selectors';
 
@@ -25,8 +24,8 @@ const IndexPage = ({ session }) => {
     }
 
     return (
-        <Layout>
-            <button onClick={() => netlifyIdentity.open()}>Log In</button>
+        <Layout session={session}>
+            <h1>GTD</h1>
         </Layout>
     );
 };

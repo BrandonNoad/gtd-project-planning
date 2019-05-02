@@ -5,36 +5,38 @@ import netlifyIdentity from 'netlify-identity-widget';
 
 import createStore from '../src/app/util/create-store';
 
-import { netlifyIdentityResultToSession } from '../src/app/util/NetlifyIdentity';
 import { logIn, logOut } from '../src/app/actions';
 
 const ReduxProviderPreloadedWithSession = ({ store, children }) => {
     const [isReady, setIsReady] = useState(false);
 
+    const boundLogInFactory = (cb = () => {}) => (session) => {
+        store.dispatch(logIn(session));
+        cb();
+    };
+
+    const boundLogOut = () => store.dispatch(logOut());
+
     useEffect(() => {
-        const netlifyIdentityCallback = (netlifyIdentityResult) => {
-            const session = netlifyIdentityResultToSession(netlifyIdentityResult);
-
-            // Is the user logged in?
-            if (session !== null) {
-                store.dispatch(logIn(session));
-            }
-        };
-
         netlifyIdentity.init();
 
         // May be null.
         const netlifyIdentityResult = netlifyIdentity.currentUser();
 
-        // TODO: check expired
-        netlifyIdentityCallback(netlifyIdentityResult);
+        console.log(netlifyIdentityResult);
 
-        netlifyIdentity.on('login', (netlifyIdentityResult) => {
-            netlifyIdentityCallback(netlifyIdentityResult);
-            netlifyIdentity.close();
-        });
+        if (netlifyIdentityResult !== null) {
+            // Is the token fresh?
+            if (Date.now() < netlifyIdentityResult.token.expires_at) {
+                boundLogInFactory()(netlifyIdentityResult);
+            } else {
+                netlifyIdentity.logout();
+            }
+        }
 
-        netlifyIdentity.on('logout', () => store.dispatch(logOut()));
+        netlifyIdentity.on('login', boundLogInFactory(netlifyIdentity.close));
+
+        netlifyIdentity.on('logout', boundLogOut);
 
         setIsReady(true);
     }, [store]);

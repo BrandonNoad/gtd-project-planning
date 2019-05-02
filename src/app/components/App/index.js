@@ -2,15 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import netlifyIdentity from 'netlify-identity-widget';
-
-import Layout from '../../../components/layout';
 
 let App = ({ session, handleSubmit }) => (
-    <Layout>
+    <>
         <h1>Hello {session.user_metadata.full_name}</h1>
         <p>Name, Purpose, Desired Outcome, Brainstorming, Next Action</p>
-        <button onClick={() => netlifyIdentity.logout()}>Log Out</button>
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="name">Name</label>
@@ -18,8 +14,7 @@ let App = ({ session, handleSubmit }) => (
             </div>
             <button type="submit">Submit</button>
         </form>
-        )
-    </Layout>
+    </>
 );
 
 App.propTypes = {
