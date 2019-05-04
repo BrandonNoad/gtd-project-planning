@@ -5,7 +5,7 @@ import { navigate } from 'gatsby';
 
 import { selectSession } from '../app/selectors';
 
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 
 // TODO: this isn't refreshing when we log in/log out. Probably something to do with it being a static page.
 const IndexPage = ({ session }) => {
@@ -24,7 +24,7 @@ const IndexPage = ({ session }) => {
     }
 
     return (
-        <Layout session={session}>
+        <Layout>
             <h1>GTD</h1>
         </Layout>
     );
