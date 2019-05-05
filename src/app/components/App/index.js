@@ -2,34 +2,49 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
+import { Flex, Box, Button } from '@rebass/emotion';
 
-let App = ({ session, handleSubmit }) => (
-    <>
-        <h1>Hello {session.user_metadata.full_name}</h1>
-        <p>Name, Purpose, Desired Outcome, Brainstorming, Next Action</p>
+import { createProjectPlan } from '../../actions';
+
+let App = ({ handleSubmit }) => (
+    <Flex justifyContent="center">
         <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="name">Name</label>
-                <Field name="name" component="input" type="text" />
-            </div>
-            <button type="submit">Submit</button>
+            <Box>
+                <Box>
+                    <label htmlFor="projectName">Project</label>
+                    <Field name="projectName" component="input" type="text" />
+                </Box>
+                <Box>
+                    <label htmlFor="purpose">Purpose</label>
+                    <Field name="purpose" component="textarea" />
+                </Box>
+                <Box>
+                    <label htmlFor="outcome">Outcome</label>
+                    <Field name="outcome" component="textarea" />
+                </Box>
+                <Box>
+                    <label htmlFor="brainstorming">Brainstorming</label>
+                    <Field name="brainstorming" component="textarea" />
+                </Box>
+                <Box>
+                    <label htmlFor="nextAction">Next Action</label>
+                    <Field name="nextAction" component="textarea" />
+                </Box>
+            </Box>
+            <Button type="submit">GTD</Button>
         </form>
-    </>
+    </Flex>
 );
 
 App.propTypes = {
-    // TODO: enforce null or string
-    session: PropTypes.any,
     handleSubmit: PropTypes.func.isRequired
 };
 
 App = reduxForm({
-    form: 'gtd-project-planning'
+    form: 'gtdProjectPlanning'
 })(App);
 
 export default connect(
     null,
-    () => ({
-        onSubmit: (data) => console.log(data)
-    })
+    (dispatch) => ({ onSubmit: (data) => dispatch(createProjectPlan(data)) })
 )(App);

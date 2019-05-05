@@ -1,7 +1,9 @@
 'use strict';
 
-// If .env is missing (e.g production), this will fail silently.
-require('dotenv').config();
+const path = require('path');
+
+// If .env.development is missing (e.g production), this will fail silently.
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.development') });
 
 const Boom = require('boom');
 const Joi = require('joi');

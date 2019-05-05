@@ -1,22 +1,18 @@
-// import Axios from 'axios';
+import Axios from 'axios';
 
-// let axiosInstance = null;
+let axiosInstance = null;
 
-// const teamId = 1;
+export const init = (jwt) => {
+    if (axiosInstance !== null) {
+        // return;
+    }
 
-// export const init = (jwt) => {
-//     if (axiosInstance !== null) {
-//         return;
-//     }
+    const headers = { Authorization: `Bearer ${jwt}` };
 
-//     const headers = { Authorization: `Bearer ${jwt}` };
+    axiosInstance = Axios.create({
+        baseURL: `${process.env.GATSBY_BASE_URL}/.netlify/functions`,
+        headers
+    });
+};
 
-//     axiosInstance = Axios.create({
-//         baseURL: 'http://Brandons-MacBook-Air.local:3001/v1.0/',
-//         headers
-//     });
-// };
-
-// // date needs to be formatted as YYYY-MM-DD
-// export const fetchScheduledRecipesForDay = (queryParams) =>
-//     axiosInstance.get(`/teams/${teamId}/scheduledRecipes`, { params: queryParams });
+export const createProjectPlan = (payload) => axiosInstance.post('/gtd', payload);
