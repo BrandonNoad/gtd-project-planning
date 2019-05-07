@@ -23,8 +23,6 @@ const ReduxProviderPreloadedWithSession = ({ store, children }) => {
         // May be null.
         const netlifyIdentityResult = netlifyIdentity.currentUser();
 
-        console.log(netlifyIdentityResult);
-
         if (netlifyIdentityResult !== null) {
             // Is the token fresh?
             if (Date.now() < netlifyIdentityResult.token.expires_at) {

@@ -71,9 +71,13 @@ exports.handler = async (event, context) => {
             throw Boom.boomify(error, { statusCode: 400 });
         }
 
-        const evernoteClient = new Evernote.Client({ token: process.env.EVERNOTE_DEVELOPER_TOKEN });
+        const evernoteClient = new Evernote.Client({
+            token: process.env.EVERNOTE_DEVELOPER_TOKEN,
+            sandbox: !!parseInt(process.env.EVERNOTE_IS_SANDBOX, 10)
+        });
 
-        const evernoteNoteStore = evernoteClient.getNoteStore();
+        // process.env.EVERNOTE_NOTE_STORE_URL will be undefined in the development environment.
+        const evernoteNoteStore = evernoteClient.getNoteStore(process.env.EVERNOTE_NOTE_STORE_URL);
 
         const evernoteNotebookPayload = {
             ...new Evernote.Types.Notebook(),
