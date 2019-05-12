@@ -34,7 +34,8 @@ module.exports = {
         {
             resolve: `gatsby-plugin-create-client-paths`,
             options: { prefixes: [`/app/*`] }
-        }
+        },
+        `gatsby-plugin-emotion`
         // this (optional) plugin enables Progressive Web App + Offline functionality
         // To learn more, visit: https://gatsby.app/offline
         // 'gatsby-plugin-offline',

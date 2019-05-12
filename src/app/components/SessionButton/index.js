@@ -10,10 +10,18 @@ const SessionButton = ({ session }) => {
     const isLoggedIn = session !== null;
 
     if (isLoggedIn) {
-        return <Button onClick={() => netlifyIdentity.logout()}>Log Out</Button>;
+        return (
+            <Button bg="#00ad9f" onClick={() => netlifyIdentity.logout()}>
+                Log Out
+            </Button>
+        );
     }
 
-    return <Button onClick={() => netlifyIdentity.open()}>Log In</Button>;
+    return (
+        <Button bg="#00ad9f" onClick={() => netlifyIdentity.open()}>
+            Log In
+        </Button>
+    );
 };
 
 SessionButton.propTypes = {

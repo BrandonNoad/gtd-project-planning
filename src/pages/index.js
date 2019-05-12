@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigate } from 'gatsby';
+import netlifyIdentity from 'netlify-identity-widget';
+import { Flex, Heading } from '@rebass/emotion';
 
 import { selectSession } from '../app/selectors';
 
@@ -15,7 +17,10 @@ const IndexPage = ({ session }) => {
         // If the user is already logged in, then redirect to the app page.
         if (isLoggedIn) {
             navigate('/app');
+            return;
         }
+
+        netlifyIdentity.open();
     }, [isLoggedIn]);
 
     if (isLoggedIn) {
@@ -25,7 +30,9 @@ const IndexPage = ({ session }) => {
 
     return (
         <Layout>
-            <h1>GTD</h1>
+            <Flex justifyContent="center" align-items="center">
+                <Heading>GTD</Heading>
+            </Flex>
         </Layout>
     );
 };

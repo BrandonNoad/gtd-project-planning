@@ -7,12 +7,13 @@ import Header from '../Header';
 // import { StaticQuery, graphql } from 'gatsby';
 
 import 'normalize.css';
+import './index.css';
 
 const Layout = ({ children }) => (
-    <div>
+    <>
         <Header />
         <main>{children}</main>
-    </div>
+    </>
 );
 
 Layout.propTypes = {
