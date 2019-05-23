@@ -1,54 +1,50 @@
 import React from 'react';
 import { Field, reduxForm, propTypes } from 'redux-form';
-import { Flex, Box, Button } from '@rebass/emotion';
-import { css } from '@emotion/core';
+import { Flex, Box, Button, Card } from '@rebass/emotion';
 
-const input = css`
-    width: 100%;
-    border-radius: 4px;
-    border: 2px solid #e9ebeb;
-    resize: vertical;
-`;
+import Input from '../Input';
+import Textarea from '../Textarea';
 
 import { createProjectPlan } from '../../actions';
 
 const App = ({ handleSubmit }) => (
-    <Box width={[1, 1 / 2]} mt={4} mx="auto" p={4}>
+    <Card
+        width={[3 / 4, null, 1 / 2]}
+        mt={4}
+        mx="auto"
+        p={4}
+        bg="white"
+        borderRadius={6}
+        boxShadow="0 2px 16px rgba(0, 0, 0, 0.25)"
+    >
         <form onSubmit={handleSubmit}>
-            <Box mb={2}>
-                <label htmlFor="projectName">Project</label>
-                <br />
-                <Field name="projectName" component="input" type="text" css={input} />
-            </Box>
-            <Flex justifyContent="space-between" mb={2}>
-                <Box flex="0 1 48%">
+            <Flex flexWrap="wrap" justifyContent="space-between">
+                <Box flex={['0 1 100%']} mb={[1, null, 2]}>
+                    <label htmlFor="projectName">Project</label>
+                    <Field name="projectName" component={Input} type="text" />
+                </Box>
+                <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="purpose">Purpose</label>
-                    <br />
-                    <Field name="purpose" component="textarea" css={input} />
+                    <Field name="purpose" component={Textarea} />
                 </Box>
-                <Box flex="0 1 48%">
+                <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="outcome">Outcome</label>
-                    <br />
-                    <Field name="outcome" component="textarea" css={input} />
+                    <Field name="outcome" component={Textarea} />
                 </Box>
-            </Flex>
-            <Flex justifyContent="space-between" mb={2}>
-                <Box flex="0 1 48%">
+                <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="brainstorming">Brainstorming</label>
-                    <br />
-                    <Field name="brainstorming" component="textarea" css={input} />
+                    <Field name="brainstorming" component={Textarea} />
                 </Box>
-                <Box flex="0 1 48%">
+                <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="nextAction">Next Action</label>
-                    <br />
-                    <Field name="nextAction" component="textarea" css={input} />
+                    <Field name="nextAction" component={Textarea} />
                 </Box>
+                <Button type="submit" bg="#00ad9f">
+                    GTD
+                </Button>
             </Flex>
-            <Button type="submit" bg="#00ad9f">
-                GTD
-            </Button>
         </form>
-    </Box>
+    </Card>
 );
 
 App.propTypes = {

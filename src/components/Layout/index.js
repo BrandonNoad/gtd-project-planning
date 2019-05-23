@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Box } from '@rebass/emotion';
+
 import Header from '../Header';
 
 // TODO: use hook
@@ -12,7 +14,9 @@ import './index.css';
 const Layout = ({ children }) => (
     <>
         <Header />
-        <main>{children}</main>
+        <main>
+            <Box>{children}</Box>
+        </main>
     </>
 );
 
