@@ -1,11 +1,13 @@
 import React from 'react';
 import { Field, reduxForm, propTypes } from 'redux-form';
-import { Flex, Box, Button, Card } from '@rebass/emotion';
-
-import Input from '../Input';
-import Textarea from '../Textarea';
+import { Flex, Box, Button, Card } from 'rebass';
+import { Input, Textarea } from '@rebass/forms';
 
 import { createProjectPlan } from '../../actions';
+
+const FieldInput = ({ input, meta }) => <Input {...input} {...meta} />;
+
+const FieldTextarea = ({ input, meta }) => <Textarea {...input} {...meta} />;
 
 const App = ({ handleSubmit }) => (
     <Card
@@ -21,23 +23,23 @@ const App = ({ handleSubmit }) => (
             <Flex flexWrap="wrap" justifyContent="space-between">
                 <Box flex={['0 1 100%']} mb={[1, null, 2]}>
                     <label htmlFor="projectName">Project</label>
-                    <Field name="projectName" component={Input} type="text" />
+                    <Field name="projectName" component={FieldInput} type="text" />
                 </Box>
                 <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="purpose">Purpose</label>
-                    <Field name="purpose" component={Textarea} />
+                    <Field name="purpose" component={FieldTextarea} />
                 </Box>
                 <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="outcome">Outcome</label>
-                    <Field name="outcome" component={Textarea} />
+                    <Field name="outcome" component={FieldTextarea} />
                 </Box>
                 <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="brainstorming">Brainstorming</label>
-                    <Field name="brainstorming" component={Textarea} />
+                    <Field name="brainstorming" component={FieldTextarea} />
                 </Box>
                 <Box flex={['0 1 100%', null, '0 1 48%']} mb={[1, null, 2]}>
                     <label htmlFor="nextAction">Next Action</label>
-                    <Field name="nextAction" component={Textarea} />
+                    <Field name="nextAction" component={FieldTextarea} />
                 </Box>
                 <Button type="submit" bg="#00ad9f">
                     GTD

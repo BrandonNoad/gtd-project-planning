@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button } from '@rebass/emotion';
+import { Button } from 'rebass';
 import netlifyIdentity from 'netlify-identity-widget';
 
 import { selectSession } from '../../selectors';

@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { Flex, Heading } from '@rebass/emotion';
+import { Flex, Heading } from 'rebass';
 import SessionButton from '../../app/components/SessionButton';
 
 const Header = ({ siteTitle }) => {

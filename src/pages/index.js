@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { navigate } from 'gatsby';
 import netlifyIdentity from 'netlify-identity-widget';
-import { Flex, Box } from '@rebass/emotion';
+import { Flex, Box } from 'rebass';
 
 import { selectSession } from '../app/selectors';
 
@@ -30,7 +30,9 @@ const IndexPage = ({ session }) => {
             return;
         }
 
-        netlifyIdentity.open();
+        if (window.location.hash === '') {
+            netlifyIdentity.open();
+        }
     }, [isLoggedIn]);
 
     if (isLoggedIn) {

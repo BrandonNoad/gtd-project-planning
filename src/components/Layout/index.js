@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Box } from '@rebass/emotion';
+import { Box } from 'rebass';
 
 import Header from '../Header';
 
