@@ -4,7 +4,7 @@ let axiosInstance = null;
 
 export const init = (jwt) => {
     if (axiosInstance !== null) {
-        // return;
+        return;
     }
 
     const headers = { Authorization: `Bearer ${jwt}` };
