@@ -8,7 +8,6 @@ require('dotenv').config({ path: path.resolve(process.cwd(), '.env.development')
 const Boom = require('boom');
 const Joi = require('joi');
 const Evernote = require('evernote');
-const Axios = require('axios');
 
 const generateEnexList = (inputString) => {
     const listItems = inputString
@@ -22,6 +21,18 @@ const generateEnexList = (inputString) => {
     }
 
     return `<ul>${listItems.join('')}</ul>`;
+};
+
+const generateEnexNextActionsTable = (nextAction) => {
+    const colWidth = 300;
+
+    const colStyle = `width: ${colWidth}px;`;
+
+    const tdStyle = `width: ${colWidth}px; padding: 8px; border: 1px solid;`;
+
+    return `<table style="border-collapse: collapse; min-width: 100%;"><colgroup><col style="${colStyle}" /><col style="${colStyle}" /><col style="${colStyle}" /></colgroup><tbody><tr><td style="${tdStyle}"><div><b>Next Actions</b></div></td><td style="${tdStyle}"><div><b>WIP</b></div></td><td style="${tdStyle}"><div><b>Done</b></div></td></tr><tr><td style="${tdStyle}"><div>${
+        nextAction !== '' ? `=&gt; ${nextAction}` : '<br />'
+    }</div></td><td style="${tdStyle}"><div><br /></div></td><td style="${tdStyle}"><div><br /></div></td></tr></tbody></table>`;
 };
 
 exports.handler = async (event, context) => {
@@ -87,75 +98,11 @@ exports.handler = async (event, context) => {
 
         const newEvernoteNotebook = await evernoteNoteStore.createNotebook(evernoteNotebookPayload);
 
-        const trelloCredentials = {
-            // Trello API Key (public)
-            key: process.env.TRELLO_API_KEY,
-
-            // Trello sample token
-            token: process.env.TRELLO_AUTH_TOKEN
-        };
-
-        // -- Find the Trello board to copy.
-
-        const boardsForUserUrl = `https://api.trello.com/1/members/${
-            process.env.TRELLO_USERNAME
-        }/boards`;
-
-        const { data: boardsForUser } = await Axios.get(boardsForUserUrl, {
-            params: { ...trelloCredentials }
-        });
-
-        const boardToCopy = boardsForUser.find(
-            ({ shortLink }) => shortLink === process.env.TRELLO_BOARD_TO_COPY_SHORT_LINK
-        );
-
-        if (boardToCopy === undefined) {
-            throw new Error('Bad Implementation!');
-        }
-
-        // -- Create new Trello board using the board to copy as a template.
-
-        const newTrelloBoardUrl = 'https://api.trello.com/1/boards';
-
-        const idBoardSource = boardToCopy.id;
-
-        const { data: newTrelloBoard } = await Axios.post(newTrelloBoardUrl, undefined, {
-            params: { ...trelloCredentials, name: postPayload.projectName, idBoardSource }
-        });
-
-        if (postPayload.nextAction !== '') {
-            // -- Find the "Next Actions" list so we can add a card to it.
-
-            const listsUrlForNewTrelloBoard = `https://api.trello.com/1/boards/${
-                newTrelloBoard.id
-            }/lists`;
-
-            const { data: lists } = await Axios.get(listsUrlForNewTrelloBoard, {
-                params: { ...trelloCredentials, cards: 'none' }
-            });
-
-            const nextActionsList = lists.find(({ name }) => name === 'Next Actions');
-
-            if (nextActionsList === undefined) {
-                throw new Error('Bad Implementation!');
-            }
-
-            // -- Add a card to the "Next Actions" list for the given next action.
-
-            const newTrelloCardUrl = 'https://api.trello.com/1/cards';
-
-            const idList = nextActionsList.id;
-
-            await Axios.post(newTrelloCardUrl, undefined, {
-                params: { ...trelloCredentials, name: postPayload.nextAction, idList }
-            });
-        }
+        const nextActionsTable = generateEnexNextActionsTable(postPayload.nextAction);
 
         const brainstormingList = generateEnexList(postPayload.brainstorming);
 
-        const noteContent = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><div>NEXT ACTION: <a href="${
-            newTrelloBoard.shortUrl
-        }" style="color: rgb(56, 56, 56); font-family: -apple-system, system-ui, &quot;Segoe UI&quot;, Roboto, Oxygen, Ubuntu, Cantarell, &quot;Fira Sans&quot;, &quot;Droid Sans&quot;, &quot;Helvetica Neue&quot;, sans-serif; font-size: 14px; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px;">Next Actions Trello Board</a></div><hr /><div>PURPOSE: ${
+        const noteContent = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><div>${nextActionsTable}</div><hr /><div>PURPOSE: ${
             postPayload.purpose
         }</div><hr /><div>OUTCOME: ${
             postPayload.outcome
