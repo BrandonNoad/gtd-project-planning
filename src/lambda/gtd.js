@@ -102,7 +102,7 @@ exports.handler = async (event, context) => {
 
         const brainstormingList = generateEnexList(postPayload.brainstorming);
 
-        const noteContent = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note>${nextActionsTable}<hr /><div>PURPOSE: ${
+        const noteContent = `<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd"><en-note><div>${nextActionsTable}</div><hr /><div>PURPOSE: ${
             postPayload.purpose
         }</div><hr /><div>OUTCOME: ${
             postPayload.outcome
