@@ -110,7 +110,7 @@ exports.handler = async (event, context) => {
 
         const evernoteNotePayload = {
             ...new Evernote.Types.Note(),
-            title: `PROJECT: ${postPayload.projectName}`,
+            title: `📋 PROJECT: ${postPayload.projectName}`,
             content: noteContent,
             notebookGuid: newEvernoteNotebook.guid,
             tagNames: ['*Project'],
