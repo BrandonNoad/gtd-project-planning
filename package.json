@@ -9,7 +9,7 @@
         "@emotion/styled": "^10.0.10",
         "@rebass/forms": "^4.0.5",
         "@rebass/preset": "^4.0.5",
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "boom": "^7.3.0",
         "emotion-theming": "^10.0.10",
         "evernote": "^2.0.5",
